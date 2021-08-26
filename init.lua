@@ -64,6 +64,7 @@ minetest.register_chatcommand("new_tag", {
 
 minetest.register_chatcommand("end_tag", {
     description = "End the current game of tag",
+    privs = {tag=true},
     func = function(name, _)
         if tag.game then
             tag.end_game()
