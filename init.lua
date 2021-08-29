@@ -19,6 +19,12 @@ tag.new_game = function()
     minetest.chat_send_all("The tagged player's name is: " .. tag.tagged_player)
     local tplayer = minetest.get_player_by_name(tag.tagged_player)
     tplayer:set_properties({textures = {"character.png^[colorize:#FF0000:150"}})
+    local pos = {x=1,y=2,z=3}
+    local str = "hello world"
+    minetest.after(600, function()
+	if tag.game then
+            tag.end_game()
+    end)
 end
 
 tag.end_game = function()
@@ -62,18 +68,6 @@ minetest.register_chatcommand("new_tag", {
     end,
 })
 
-minetest.register_chatcommand("end_tag", {
-    description = "End the current game of tag",
-    privs = {tag=true},
-    func = function(name, _)
-        if tag.game then
-            tag.end_game()
-        else
-            minetest.chat_send_player(name, "There is no game of tag currently going on, to start one, do /new_tag")
-        end
-    end,
-})
-
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
     tag.handle_punch(player, hitter)
 end)
@@ -96,7 +90,6 @@ local timer = 0
 minetest.register_globalstep(function(dtime)
 	timer = timer + dtime
 	if timer >= 3 then 
-		-- Send "Minetest" to all players every 5 seconds
 		tag.spam_tagged_player()
 		timer = 0
 	end
